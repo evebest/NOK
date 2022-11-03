@@ -30,32 +30,42 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
             암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다. <br />자유롭게
             작성해주세요.
         </h3>
-        <div id="search">
-            <input type="text" placeholder="검색어를 입력하세요" />
-            <button class="ui button">검색</button>
+        <div>
+            <nav id="left_nav">
+            </nav>
+
+            <nav id="right_nav">
+
+            </nav>
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>no</th>
-                    <th>구분</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>등록일</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = mysqli_fetch_assoc($result)) {
+        <div id="center_content">
+            <div id="search">
+                <input type="text" placeholder=" 검색어를 입력하세요." />
+                <button class="ui button">검색</button>
+            </div>
+            <table class="ui fixed single line celled table center aligned">
+                <thead>
+                    <tr>
+                        <th width="8%">no</th>
+                        <th width="10%">구분</th>
+                        <th>제목</th>
+                        <th width="15%">작성자</th>
+                        <th width="20%">등록일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr><td>".$row['id']."</td><td>".$row['classify']."</td><td>".$row['title']."</td><td>".$row['writer']."</td><td>".$row['regdate']."</td></tr>";
                         }?>
-            </tbody>
-            <!-- <tfoot>
+                </tbody>
+                <!-- <tfoot>
                 <tr>
                     <td>Sum</td>
                     <td>$180</td>
                 </tr>
             </tfoot> -->
-        </table>
+            </table>
+        </div>
     </article>
 
 </body>

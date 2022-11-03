@@ -15,16 +15,34 @@ article input {
   border-radius: 5px;
 }
 
-#search {
-  text-align: center;
-
-  /* background-color: grey; */
-  padding: 40px;
+#left_nav {
+  float: left;
+  height: 500px;
+  width: 10%;
 }
 
-table,
-th,
-td {
-  border: 1px solid grey;
-  border-collapse: collapse;
+#right_nav {
+  float: right;
+  height: 500px;
+  width: 10%;
+}
+
+#center_content {
+  width: 80%;
+  height: 500px;
+  float: left;
+  padding: 20px;
+}
+
+#search {
+  padding: 40px;
+  text-align: center;
+}
+
+table {
+  width: 80%;
+  text-align: center;
+  margin: auto;
+  font-size: medium;
+  text-align: center;
 }
