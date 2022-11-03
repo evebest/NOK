@@ -1,8 +1,11 @@
 <?php
-$conn = mysqli_connect("localhost","root","rkdtoa87");
-mysqli_select_db($conn, "nok");
+require("db_config.php");
+$conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
+if (!$conn) {
+    die("데이터베이스에 연결할 수 없습니다.");
+}
+mysqli_select_db($conn, $dbConn["db"]);
 $result = mysqli_query($conn, "SELECT * FROM freeboard");
-
 ?>
 <!DOCTYPE html>
 <html>
