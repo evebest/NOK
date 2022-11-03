@@ -43,6 +43,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                 <input type="text" placeholder=" 검색어를 입력하세요." />
                 <button class="ui button">검색</button>
             </div>
+            <button onclick="document.location.href='write.php'">작성하기</button>
             <table class="ui fixed single line celled table center aligned">
                 <thead>
                     <tr>
