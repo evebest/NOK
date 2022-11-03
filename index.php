@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>암환우 보호자 커뮤니티</title>
     <link rel="stylesheet" type="text/css" href="semantic/semantic.css" />
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -27,6 +28,9 @@
 
     #search {
         text-align: center;
+
+        /* background-color: grey; */
+        padding: 40px;
     }
     </style>
 </head>
