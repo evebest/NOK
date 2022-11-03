@@ -1,0 +1,30 @@
+header {
+  padding: 50px;
+  border-bottom: 1px solid grey;
+  text-align: center;
+}
+
+article h3 {
+  text-align: center;
+  padding: 20px;
+}
+
+article input {
+  width: 50%;
+  height: 35px;
+  border-radius: 5px;
+}
+
+#search {
+  text-align: center;
+
+  /* background-color: grey; */
+  padding: 40px;
+}
+
+table,
+th,
+td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+}

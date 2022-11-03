@@ -1,3 +1,9 @@
+<?php
+$conn = mysqli_connect("localhost","root","rkdtoa87");
+mysqli_select_db($conn, "nok");
+$result = mysqli_query($conn, "SELECT * FROM freeboard");
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -5,34 +11,10 @@
     <meta charset="utf-8">
     <title>암환우 보호자 커뮤니티</title>
     <link rel="stylesheet" type="text/css" href="semantic/semantic.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="semantic/semantic.js"></script>
-    <style>
-    header {
-        padding: 50px;
-        border-bottom: 1px solid grey;
-        text-align: center;
-    }
-
-    article h3 {
-        text-align: center;
-        padding: 20px;
-    }
-
-    article input {
-        width: 50%;
-        height: 35px;
-        border-radius: 5px;
-    }
-
-    #search {
-        text-align: center;
-
-        /* background-color: grey; */
-        padding: 40px;
-    }
-    </style>
 </head>
 
 <body>
@@ -49,6 +31,28 @@
             <input type="text" placeholder="검색어를 입력하세요" />
             <button class="ui button">검색</button>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>no</th>
+                    <th>구분</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>등록일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr><td>".$row['id']."</td><td>".$row['classify']."</td><td>".$row['title']."</td><td>".$row['writer']."</td><td>".$row['regdate']."</td></tr>";
+                        }?>
+            </tbody>
+            <!-- <tfoot>
+                <tr>
+                    <td>Sum</td>
+                    <td>$180</td>
+                </tr>
+            </tfoot> -->
+        </table>
     </article>
 
 </body>
