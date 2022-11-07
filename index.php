@@ -55,16 +55,13 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr><td>".$row['id']."</td><td>".$row['classify']."</td><td>".$row['title']."</td><td>".$row['writer']."</td><td>".$row['regdate']."</td></tr>";
-                        }?>
+                    <?php 
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr><td>".$row['id']."</td><td>".$row['classify']."</td><td>".htmlspecialchars($row['title'])."</td><td>".htmlspecialchars($row['writer'])."</td><td>".$row['regdate']."</td></tr>";
+                        }
+                       
+                    ?>
                 </tbody>
-                <!-- <tfoot>
-                <tr>
-                    <td>Sum</td>
-                    <td>$180</td>
-                </tr>
-            </tfoot> -->
             </table>
         </div>
     </article>
