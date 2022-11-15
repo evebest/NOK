@@ -5,7 +5,9 @@ if (!$conn) {
     die("데이터베이스에 연결할 수 없습니다.");
 }
 mysqli_select_db($conn, $dbConn["db"]);
-$result = mysqli_query($conn, "SELECT * FROM freeboard");
+$id = $_GET["id"];
+$result = mysqli_query($conn, "SELECT * FROM freeboard WHERE id='".$id."'");
+$row = mysqli_fetch_assoc($result);
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +37,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     <link rel="stylesheet" type="text/css" href="semantic/components/icon.css" />
     <link rel="stylesheet" type="text/css" href="semantic/components/input.css" />
     <link rel="stylesheet" type="text/css" href="semantic/components/button.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/card.css" />
+    <link rel="stylesheet" type="text/css" href="semantic/components/form.css" />
 
 
     <style type="text/css">
@@ -44,22 +46,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     }
 
     .ui.menu .item img.logo {
-        /* em : 지정되거나 상속받은(혹은 상위 elements)에 대한 상대적인 백분율 크기  */
-        /* 따라서 화면 크기에 동적으로 반응하는 확장형 웹에 유용함. */
         margin-right: 1.5em;
-    }
-
-    .ui.card {
-        width: 100%;
-    }
-
-    #writer {
-        display: inline;
-    }
-
-    #regdate {
-        display: inline;
-        float: right;
     }
 
     .main.container {
@@ -73,6 +60,26 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     .ui.footer.segment {
         margin: 5em 0em 0em;
         padding: 5em 0em;
+    }
+
+    .ui.form textarea {
+        resize: none;
+        height: 6em;
+
+    }
+
+    .ui.form textarea:focus {
+        outline: none;
+    }
+
+    .top,
+    .title,
+    .content {
+        margin: 10px 0px 50px 0px;
+    }
+
+    .content {
+        font-size: 16px;
     }
     </style>
 </head>
@@ -107,45 +114,28 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     </div>
 
     <div class="ui main text container">
-        <h1 class="ui header">암환우 보호자 커뮤니티</h1>
-        <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
-        <p>자유롭게 작성해 주세요.</p>
-        <div class="ui fluid icon input">
-            <input type="text" placeholder="검색어를 입력하세요...">
-            <i class="search icon"></i>
+        <!-- <form class="ui form" action="process.php" method="POST"> -->
+        <div class="top">
+            <p><?php echo $row['classify']?></p>
+            <p><?php echo $row['writer']?></p>
         </div>
-        <?php 
-            while ($row = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="ui card">
-            <div class="content">
-                <div class="header"><a
-                        href="read.php?id=<?php echo $row['id']?>"><?php echo htmlspecialchars($row['title'])?></a>
-                </div>
-            </div>
-            <div class="content">
-                <h4 class="ui sub header"><?php echo $row['classify']?></h4>
-                <div class="ui small feed">
-                    <div class="event">
-                        <div class="content">
-                            <div class="summary">
-                                <?php echo htmlspecialchars($row['content'])?>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui small feed" id="writer"><?php echo htmlspecialchars($row['writer'])?></div>
-                <div class="ui small feed" id="regdate"><?php echo $row['regdate']?></div>
-            </div>
+        <div class="title">
+            <h1>
+                <p><?php echo $row['title']?></p>
+            </h1>
         </div>
-        <?php } ?>
-        <div>
-            <button class="ui button" onclick="document.location.href='2.php'">등록하기</button>
+        <div class="content">
+            <?php echo $row['content']?>
         </div>
-
+        <!-- </form> -->
+        <form class="ui reply form">
+            <div class="field">
+                <textarea></textarea>
+            </div>
+            <div class="ui primary submit labeled icon button">
+                <i class="icon edit"></i> Add Comment
+            </div>
+        </form>
     </div>
 
     <div class="ui inverted vertical footer segment">

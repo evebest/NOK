@@ -6,6 +6,7 @@ if (!$conn) {
 }
 mysqli_select_db($conn, $dbConn["db"]);
 $result = mysqli_query($conn, "SELECT * FROM freeboard");
+
 ?>
 <!DOCTYPE html>
 <html>
