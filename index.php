@@ -143,7 +143,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         </div>
         <?php } ?>
         <div>
-            <button class="ui button" onclick="document.location.href='2.php'">등록하기</button>
+            <button class="ui button" onclick="document.location.href='write.php'">등록하기</button>
         </div>
 
     </div>
