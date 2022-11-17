@@ -67,35 +67,35 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     <div class="ui main text container">
         <h1>회원가입</h1>
         <div class="signup"></div>
-        <form class="ui form" action="#" method="POST">
+        <form class="ui form" action="signup_process.php" method="POST">
             <div class="signup" id="id">
                 <label>아이디</label>
                 <div class="ui fluid input">
-                    <input type="text" placeholder="4~15자 이내로 입력해주세요">
+                    <input type="text" name="login_id" placeholder="4~15자 이내로 입력해주세요">
                 </div>
             </div>
             <div class="signup" id="pw">
                 <label>비밀번호</label>
                 <div class="ui fluid input">
-                    <input type="text" placeholder="최소 6자 이상(알파벳, 숫자 필수)">
+                    <input type="text" name="pw" placeholder="최소 6자 이상(알파벳, 숫자 필수)">
                 </div>
             </div>
             <div class="signup" id="email">
                 <label>이메일</label>
                 <div class="ui fluid input">
-                    <input type="text" placeholder="abcd@cancer.com">
+                    <input type="text" name="email" placeholder="abcd@cancer.com">
                 </div>
             </div>
             <div class="signup" id="name">
                 <label>실명</label>
                 <div class="ui fluid input">
-                    <input type="text" placeholder="홍길동">
+                    <input type="text" name="name" placeholder="홍길동">
                 </div>
             </div>
             <div class="signup" id="nickname">
                 <label>닉네임</label>
                 <div class="ui fluid input">
-                    <input type="text" placeholder="홍길동">
+                    <input type="text" name="nickname" placeholder="홍길동">
                 </div>
             </div>
 
