@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!isset($_SESSION['is_login'])){
+    header('Location: ./login.php?returnURL=w');}
+
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
@@ -94,15 +98,10 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     </div>
 
     <div class="ui main text container">
-        <!-- <div class="ui icon input">
-            <input type="text" placeholder="Search...">
-            <i class="circular search link icon"></i>
-        </div> -->
         <h1 class="ui header">글쓰기</h1>
         <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
         <p>자유롭게 작성해 주세요.</p>
 
-        <!-- @@@ form test -->
         <form class="ui form" action="process.php" method="POST">
             <div class="field">
                 <label>구분</label>
@@ -126,14 +125,12 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
             <div class="field">
                 <label>작성자</label>
                 <div class="field">
-                    <input type="text" name="writer" placeholder="">
+                    <input type="text" name="writer" value="<?php echo $_SESSION['nickname']?>" readonly>
                 </div>
             </div>
 
-            <!-- <div class="ui button" tabindex="0" type="submit">등록하기</div> -->
-            <button class="ui button" type="submit">Submit</button>
+            <button class="ui primary button" type="submit">등록</button>
         </form>
-        <!-- @@@ form test -->
     </div>
 
     <div class="ui inverted vertical footer segment">

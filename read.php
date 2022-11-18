@@ -53,23 +53,15 @@ $row = mysqli_fetch_assoc($result);
         margin-top: 7em;
     }
 
-    .wireframe {
-        margin-top: 2em;
-    }
-
     .ui.footer.segment {
         margin: 5em 0em 0em;
         padding: 5em 0em;
     }
 
-    .ui.form textarea {
+    .ui.form textarea:not([rows]) {
         resize: none;
-        height: 6em;
+        height: 2em;
 
-    }
-
-    .ui.form textarea:focus {
-        outline: none;
     }
 
     .top,
@@ -114,7 +106,6 @@ $row = mysqli_fetch_assoc($result);
     </div>
 
     <div class="ui main text container">
-        <!-- <form class="ui form" action="process.php" method="POST"> -->
         <div class="top">
             <p><?php echo $row['classify']?></p>
             <p><?php echo $row['writer']?></p>
@@ -127,13 +118,12 @@ $row = mysqli_fetch_assoc($result);
         <div class="content">
             <?php echo $row['content']?>
         </div>
-        <!-- </form> -->
-        <form class="ui reply form">
+        <form class="ui reply form" id="frm" action="reply_process.php" method="POST">
             <div class="field">
-                <textarea></textarea>
+                <textarea name="reply"></textarea>
             </div>
-            <div class="ui primary submit labeled icon button">
-                <i class="icon edit"></i> Add Comment
+            <div class="ui right floated primary submit labeled icon button" onclick="test();">
+                <i class="icon edit"></i>댓글달기
             </div>
         </form>
     </div>
@@ -186,6 +176,13 @@ $row = mysqli_fetch_assoc($result);
             </div>
         </div>
     </div>
+
+    <script>
+    function test() {
+        alert("까꿍!");
+        document.getElementById("frm").submit();
+    }
+    </script>
 </body>
 
 </html>

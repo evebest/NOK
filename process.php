@@ -22,4 +22,5 @@ $result = mysqli_query($conn, $sql);
 
 //Redirection 처리가 끝난 다음 사용자를 다시 어느 페이지로 되돌리는 것
 header("Location: http://localhost:3000/index.php");
+exit;
 ?>

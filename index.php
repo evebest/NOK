@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
@@ -103,10 +105,20 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                     <a class="item" href="#">Link Item</a>
                 </div>
             </div>
+            <div style="color: white;">
+                <?php 
+            if (!empty($_SESSION['nickname'])) echo $_SESSION['nickname']."님 환영합니다!"?>
+            </div>
+            <button class="ui button" onclick="location.href='login.php'">
+                로그인
+            </button>
+            <button class="ui button" onclick="location.href='logout.php'">
+                로그아웃
+            </button>
         </div>
     </div>
 
-    <div class="ui main text container">
+    <div class=" ui main text container">
         <h1 class="ui header">암환우 보호자 커뮤니티</h1>
         <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
         <p>자유롭게 작성해 주세요.</p>
@@ -143,7 +155,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         </div>
         <?php } ?>
         <div>
-            <button class="ui button" onclick="document.location.href='write.php'">등록하기</button>
+            <button class="ui primary button" onclick="document.location.href='write.php'">글쓰기</button>
         </div>
 
     </div>
