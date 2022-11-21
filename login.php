@@ -3,6 +3,10 @@ session_start();
 if(!empty($_GET['returnURL'])){
     $type= $_GET['returnURL'];
 }
+// if(!empty($_GET['post_id'])){
+//     $post_id = $_GET['post_id'];
+// }
+
 
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
@@ -88,6 +92,10 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                 </div>
             </div>
             <input type="hidden" name="type" value=<?php echo $type?>>
+            <?php if(!empty($_GET['post_id'])) { 
+                $post_id = $_GET['post_id']; ?>
+            <input type="hidden" name="post_id" value=<?php echo $post_id?>>
+            <?php } ?>
             <button class="ui primary fluid button" type="submit">로그인</button>
 
         </form>

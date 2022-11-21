@@ -1,14 +1,24 @@
 <?php
+session_start();
+
+
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
     die("데이터베이스에 연결할 수 없습니다.");
 }
 mysqli_select_db($conn, $dbConn["db"]);
-$id = $_GET["id"];
-$result = mysqli_query($conn, "SELECT * FROM freeboard WHERE id='".$id."'");
+
+//index.php에서 read.php?id=이라고 줬으니까 $_GET으로 받을 때도 id로 받아야 됨.
+$post_id = $_GET["id"]; 
+
+$sql = "SELECT a.title, a.classify, a.content, a.regdate, b.nickname FROM (SELECT * FROM post WHERE id=".$post_id.") a JOIN user b ON a.user_id = b.id";
+$result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 ?>
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -38,6 +48,7 @@ $row = mysqli_fetch_assoc($result);
     <link rel="stylesheet" type="text/css" href="semantic/components/input.css" />
     <link rel="stylesheet" type="text/css" href="semantic/components/button.css" />
     <link rel="stylesheet" type="text/css" href="semantic/components/form.css" />
+    <link rel="stylesheet" type="text/css" href="semantic/components/message.css" />
 
 
     <style type="text/css">
@@ -61,7 +72,6 @@ $row = mysqli_fetch_assoc($result);
     .ui.form textarea:not([rows]) {
         resize: none;
         height: 2em;
-
     }
 
     .top,
@@ -79,7 +89,7 @@ $row = mysqli_fetch_assoc($result);
 <body>
     <div class="ui fixed inverted menu">
         <div class="ui container">
-            <a href="#" class="header item">
+            <a href="index.php" class="header item">
                 <img class="logo" src="assets/images/logo.png" />
                 Project Name
             </a>
@@ -102,13 +112,25 @@ $row = mysqli_fetch_assoc($result);
                     <a class="item" href="#">Link Item</a>
                 </div>
             </div>
+            <div style="color: white;">
+                <?php 
+            if (!empty($_SESSION['nickname'])) { echo $_SESSION['nickname']."님 환영합니다!";?>
+                <button class="ui button" onclick="location.href='logout.php'">
+                    로그아웃
+                </button>
+                <?php } else { ?>
+                <button class="ui button" onclick="location.href='login.php?post_id=<?php echo $post_id?>&returnURL=r'">
+                    로그인
+                </button>
+                <?php } ?>
+            </div>
         </div>
     </div>
 
     <div class="ui main text container">
         <div class="top">
             <p><?php echo $row['classify']?></p>
-            <p><?php echo $row['writer']?></p>
+            <p><?php echo $row['nickname']?></p>
         </div>
         <div class="title">
             <h1>
@@ -118,14 +140,33 @@ $row = mysqli_fetch_assoc($result);
         <div class="content">
             <?php echo $row['content']?>
         </div>
+
+        <?php 
+            $sql = "SELECT b.nickname, a.reply, a.regdate FROM (SELECT * FROM reply WHERE post_id=".$post_id.") a JOIN user b ON a.user_id=b.id";
+            $result = mysqli_query($conn, $sql);                
+            while($row = mysqli_fetch_array($result)) {
+            ?>
+        <p><?php echo $row['nickname']?></p>
+        <p><?php echo $row['reply']?></p>
+        <p><?php echo $row['regdate']?></p>
+        <?php } ?>
+
+        <?php if(!isset($_SESSION['is_login'])) {?>
+        <div class="ui bottom attached warning message">
+            <i class="icon pencil alternate"></i>
+            댓글을 쓰려면 <a href="./login.php?post_id=<?php echo $post_id?>&returnURL=r">로그인</a> 이 필요합니다.
+        </div>
+        <?php } else { ?>
         <form class="ui reply form" id="frm" action="reply_process.php" method="POST">
             <div class="field">
                 <textarea name="reply"></textarea>
+                <input type="hidden" name="post_id" value="<?php echo $post_id?>">
             </div>
             <div class="ui right floated primary submit labeled icon button" onclick="test();">
                 <i class="icon edit"></i>댓글달기
             </div>
         </form>
+        <?php } ?>
     </div>
 
     <div class="ui inverted vertical footer segment">
@@ -179,7 +220,9 @@ $row = mysqli_fetch_assoc($result);
 
     <script>
     function test() {
-        alert("까꿍!");
+        // str = document.getElementById("reply_id").value;
+        // str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+        // document.getElementById("reply_id").value = str;
         document.getElementById("frm").submit();
     }
     </script>

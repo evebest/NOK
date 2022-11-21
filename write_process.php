@@ -1,4 +1,6 @@
 <?php 
+session_start();
+
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
@@ -12,11 +14,15 @@ mysqli_select_db($conn, $dbConn["db"]);
 $filtered = array(
     'TITLE' => mysqli_real_escape_string($conn, $_POST['title']),
     'CONTENT' => mysqli_real_escape_string($conn, $_POST['content']),
-    'WRITER' => mysqli_real_escape_string($conn, $_POST['writer']),
 );
 
+$pre_sql = "SELECT id FROM user WHERE nickname='".$_POST['writer']."'";
+$pre_result = mysqli_query($conn, $pre_sql);
+$row = mysqli_fetch_assoc($pre_result);
+
+
 // 글 등록
-$sql = "INSERT INTO freeboard (classify, title, content, writer, regdate) VALUES ('".$_POST["classify"]."', '".$filtered['TITLE']."', '".$filtered['CONTENT']."', '".$filtered['WRITER']."', now())";
+$sql = "INSERT INTO post (classify, title, content, user_id, regdate) VALUES ('".$_POST["classify"]."', '".$filtered['TITLE']."', '".$filtered['CONTENT']."', ".$row['id'].", now())";
 
 $result = mysqli_query($conn, $sql);
 

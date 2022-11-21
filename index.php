@@ -7,8 +7,12 @@ if (!$conn) {
     die("데이터베이스에 연결할 수 없습니다.");
 }
 mysqli_select_db($conn, $dbConn["db"]);
-$result = mysqli_query($conn, "SELECT * FROM freeboard");
+$sql = "SELECT a.id as user_id, nickname, b.id as post_id, b.title, b.classify, b.content, b.regdate FROM user a JOIN post b ON a.id = b.user_id";
+$result = mysqli_query($conn, $sql);
 ?>
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -68,10 +72,6 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         margin-top: 7em;
     }
 
-    .wireframe {
-        margin-top: 2em;
-    }
-
     .ui.footer.segment {
         margin: 5em 0em 0em;
         padding: 5em 0em;
@@ -82,7 +82,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
 <body>
     <div class="ui fixed inverted menu">
         <div class="ui container">
-            <a href="#" class="header item">
+            <a href="index.php" class="header item">
                 <img class="logo" src="assets/images/logo.png" />
                 Project Name
             </a>
@@ -106,15 +106,21 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                 </div>
             </div>
             <div style="color: white;">
-                <?php 
-            if (!empty($_SESSION['nickname'])) echo $_SESSION['nickname']."님 환영합니다!"?>
+                <?php if (!empty($_SESSION['nickname'])) { echo $_SESSION['nickname']."님 환영합니다!";?>
+                <button class="ui button" onclick="location.href='logout.php'">
+                    로그아웃
+                </button>
+                <?php } else { ?>
+                <button class="ui button" onclick="location.href='login.php?returnURL=i'">
+                    로그인
+                </button>
+                <button class="ui button" onclick="location.href='signup.php'">
+                    회원가입
+                </button>
+                <?php } ?>
             </div>
-            <button class="ui button" onclick="location.href='login.php'">
-                로그인
-            </button>
-            <button class="ui button" onclick="location.href='logout.php'">
-                로그아웃
-            </button>
+
+
         </div>
     </div>
 
@@ -122,17 +128,16 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         <h1 class="ui header">암환우 보호자 커뮤니티</h1>
         <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
         <p>자유롭게 작성해 주세요.</p>
+
         <div class="ui fluid icon input">
             <input type="text" placeholder="검색어를 입력하세요...">
             <i class="search icon"></i>
         </div>
-        <?php 
-            while ($row = mysqli_fetch_assoc($result)) {
-        ?>
+        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
         <div class="ui card">
             <div class="content">
                 <div class="header"><a
-                        href="read.php?id=<?php echo $row['id']?>"><?php echo htmlspecialchars($row['title'])?></a>
+                        href="read.php?id=<?php echo $row['post_id']?>"><?php echo htmlspecialchars($row['title'])?></a>
                 </div>
             </div>
             <div class="content">
@@ -149,7 +154,8 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                 </div>
             </div>
             <div class="extra content">
-                <div class="ui small feed" id="writer"><?php echo htmlspecialchars($row['writer'])?></div>
+                <div class="ui small feed" id="writer">
+                    <?php echo htmlspecialchars($row['nickname'])?></div>
                 <div class="ui small feed" id="regdate"><?php echo $row['regdate']?></div>
             </div>
         </div>

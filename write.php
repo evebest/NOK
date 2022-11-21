@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if(!isset($_SESSION['is_login'])){
     header('Location: ./login.php?returnURL=w');}
 
@@ -57,10 +58,6 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         margin-top: 7em;
     }
 
-    .wireframe {
-        margin-top: 2em;
-    }
-
     .ui.footer.segment {
         margin: 5em 0em 0em;
         padding: 5em 0em;
@@ -71,7 +68,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
 <body>
     <div class="ui fixed inverted menu">
         <div class="ui container">
-            <a href="#" class="header item">
+            <a href="index.php" class="header item">
                 <img class="logo" src="assets/images/logo.png" />
                 Project Name
             </a>
@@ -94,6 +91,15 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
                     <a class="item" href="#">Link Item</a>
                 </div>
             </div>
+            <div style="color: white;">
+                <?php 
+            if (!empty($_SESSION['nickname'])) echo $_SESSION['nickname']."님 환영합니다!"?>
+                <button class="ui button" onclick="location.href='logout.php'">
+                    로그아웃
+                </button>
+            </div>
+
+
         </div>
     </div>
 
@@ -102,7 +108,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
         <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
         <p>자유롭게 작성해 주세요.</p>
 
-        <form class="ui form" action="process.php" method="POST">
+        <form class="ui form" action="write_process.php" method="POST">
             <div class="field">
                 <label>구분</label>
                 <select class="ui fluid dropdown" name="classify">
