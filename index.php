@@ -215,28 +215,40 @@ $result = mysqli_query($conn, $sql2);
         <?php
          } 
         ?>
-        <div>
-            <button class="ui primary button" onclick="document.location.href='write.php'">글쓰기</button>
-        </div>
-
-        <?php 
+        <div class="ui pagination menu">
+            <?php 
         if ($current_page_num > 1) {
-            echo "<a href='index.php?page=1'>처음</a>"; 
+            ?>
+            <a class="item" href="index.php?page=1">
+                << </a>
+                    <?php
             $pre = $current_page_num - 1; 
-            echo "<a href='index.php?page=$pre'>◀이전</a>";
-        }
-
-        for ($i = $start_block; $i <= $end_block; $i++) {
-            if ($current_page_num === $i) {
-                echo "<b>$i</b>";
-            } else {
-                echo "<a href='index.php?page=$i'>$i</a>";
+            ?>
+                    <a class="item" href="index.php?page=<?php echo $pre?>">
+                        < </a>
+                            <?php
+                            }
+                            for ($i = $start_block; $i <= $end_block; $i++) { if ($current_page_num===$i) { ?>
+                            <a class="item"><?php echo $i ?></a>
+                            <?php
+            } else { 
+            ?>
+                            <a class="item" href="index.php?page=<?php echo $i ?>"><?php echo $i ?></a>
+                            <?php
             } 
         }
 
-
-
-?>
+        if ($current_page_num < $total_page_num) {
+            $next = $current_page_num + 1;
+            ?>
+                            <a class="item" href="index.php?page=<?php echo $next?>">
+                                > </a>
+                            <a class="item" href="index.php?page=<?php echo $total_page_num?>">
+                                >> </a>
+                            <?php
+        }
+        ?>
+        </div>
     </div>
 
     <div class="ui inverted vertical footer segment">
