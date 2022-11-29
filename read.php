@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
@@ -30,26 +29,7 @@ $row = mysqli_fetch_assoc($result);
 
     <!-- Site Properties -->
     <title>암환우 보호자 커뮤니티</title>
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/reset.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/site.css" />
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/container.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/grid.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/header.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/image.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/menu.css" />
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/divider.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/list.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/segment.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/icon.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/input.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/button.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/form.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/message.css" />
-
+    <link rel="stylesheet" type="text/css" class="ui" href="/semantic/semantic.min.css">
 
     <style type="text/css">
     body {
@@ -113,14 +93,16 @@ $row = mysqli_fetch_assoc($result);
                 </div>
             </div>
             <div style="color: white;">
-                <?php 
-            if (!empty($_SESSION['nickname'])) { echo $_SESSION['nickname']."님 환영합니다!";?>
+                <?php if (!empty($_SESSION['nickname'])) { echo $_SESSION['nickname']."님 환영합니다!";?>
                 <button class="ui button" onclick="location.href='logout.php'">
                     로그아웃
                 </button>
                 <?php } else { ?>
-                <button class="ui button" onclick="location.href='login.php?post_id=<?php echo $post_id?>&returnURL=r'">
+                <button class="ui button" onclick="location.href='login.php?returnURL=i'">
                     로그인
+                </button>
+                <button class="ui button" onclick="location.href='signup.php'">
+                    회원가입
                 </button>
                 <?php } ?>
             </div>
@@ -163,6 +145,8 @@ $row = mysqli_fetch_assoc($result);
                 <input type="hidden" name="post_id" value="<?php echo $post_id?>">
             </div>
             <div class="ui right floated primary submit labeled icon button" onclick="test();">
+                <!-- <div class="ui right floated primary submit labeled icon button" onclick="fetchReply('reply_list');"
+                onclick="fetchReply('reply_list')">-->
                 <i class="icon edit"></i>댓글달기
             </div>
         </form>
@@ -225,6 +209,14 @@ $row = mysqli_fetch_assoc($result);
         // document.getElementById("reply_id").value = str;
         document.getElementById("frm").submit();
     }
+
+    // function fetchReply(name) {
+    //     fetch(name).then(function(response) {
+    //         response.json().then(function(json) {
+    //             console.log(json);
+    //         })
+    //     });
+    // }
     </script>
 </body>
 

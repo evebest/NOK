@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 require("db_config.php");
@@ -7,25 +7,42 @@ if (!$conn) {
     die("데이터베이스에 연결할 수 없습니다.");
 }
 mysqli_select_db($conn, $dbConn["db"]);
-$sql = "SELECT a.id as user_id, nickname, b.id as post_id, b.title, b.classify, b.content, b.regdate FROM user a JOIN post b ON a.id = b.user_id";
 
+// 보안을 위한 Escape 처리 (그냥 문자로 처리함)
+// injection 공격 : 고의로 DROP TABLE과 같은 명령어를 입력할 때 
+// $_POST로 넘어오는 인자값들을 직접 받지 않고, mysqli_real_eacape_string을 통해 filtering된 인자로 받아줌.
+$filtered = array(
+    'CATEGORY' => mysqli_real_escape_string($conn, $_GET['cate']),
+    'SEARCH_WORD' => mysqli_real_escape_string($conn, $_GET['search_word'])
+);
+
+if($filtered['CATEGORY'] === "whole"){
+    $sql = "SELECT * FROM post WHERE (classify LIKE '%".$filtered['SEARCH_WORD']."%' OR title LIKE '%".$filtered['SEARCH_WORD']."%' OR content LIKE '%".$filtered['SEARCH_WORD']."%')";
+}else{
+    $sql = "SELECT * FROM post WHERE ".$filtered['CATEGORY']." LIKE '%".$filtered['SEARCH_WORD']."%'";
+}
+// echo $sql;
 $result = mysqli_query($conn, $sql);
+
+if($result) {
+    echo "조회 성공";
+
+} else {
+    echo "결과 없음: ".mysqli_error($conn);
+}
+
+if(!$result) $count = 0;
+
 ?>
 
-
-
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 
 <head>
-    <!-- Standard Meta -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
-
-    <!-- Site Properties -->
-    <title>암환우 보호자 커뮤니티</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색결과</title>
     <link rel="stylesheet" type="text/css" class="ui" href="/semantic/semantic.min.css">
 
     <style type="text/css">
@@ -54,15 +71,12 @@ $result = mysqli_query($conn, $sql);
 
     .main.container {
         margin-top: 7em;
+        min-height: 400px;
     }
 
     .ui.footer.segment {
         margin: 5em 0em 0em;
         padding: 5em 0em;
-    }
-
-    form {
-        margin-bottom: 3em;
     }
     </style>
 </head>
@@ -113,66 +127,50 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <div class=" ui main text container">
-        <h1 class="ui header">암환우 보호자 커뮤니티</h1>
-        <p>암환우 보호자들의 자유로운 생각과 의견을 나누는 커뮤니티입니다.</p>
-        <p>자유롭게 작성해 주세요.</p>
+        <h1 class="ui header">검색결과</h1>
+        <p>검색어 : <?=$filtered['SEARCH_WORD']?></p>
 
-        <form class="ui form" id="search_opt" action="search.php">
-            <div class="inline fields">
-                <div class="three wide field">
-                    <select class="ui fluid search dropdown" name="cate">
-                        <option value="whole">전체</option>
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                    </select>
-                </div>
-                <div class="eleven wide field">
-                    <div class="ui icon input">
-                        <input type="text" id="search" name="search_word" placeholder="검색어를 입력하세요..."
-                            autocomplete="off">
-                        <!-- <i class="search icon"></i> -->
-                    </div>
-                </div>
-                <div class="two wide field">
-                    <button class="ui button submit">검색</button>
-                </div>
-            </div>
-        </form>
 
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-        <div class="ui card">
-            <!-- <?php echo $row['post_id']?> -->
-            <div class="content">
-                <div class="header"><a
-                        href="read.php?id=<?php echo $row['post_id']?>"><?php echo htmlspecialchars($row['title'])?></a>
-                </div>
-            </div>
-            <div class="content">
-                <h4 class="ui sub header"><?php echo $row['classify']?></h4>
-                <div class="ui small feed">
-                    <div class="event">
-                        <div class="content">
-                            <div class="summary">
-                                <?php echo htmlspecialchars($row['content'])?>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="extra content">
-                <div class="ui small feed" id="writer">
-                    <?php echo htmlspecialchars($row['nickname'])?></div>
-                <div class="ui small feed" id="regdate"><?php echo $row['regdate']?></div>
-            </div>
-        </div>
-        <?php } ?>
-        <div>
-            <button class="ui primary button" onclick="document.location.href='write.php'">글쓰기</button>
-        </div>
-
+        <table style="width:1000px;" class=middle>
+            <thead>
+                <tr align=center>
+                    <th width=70>No</th>
+                    <th width=300>제목</th>
+                    <th width=120>내용</th>
+                    <th width=120>작성자</th>
+                    <th width=70>작성일</th>
+                    <th width=70>💜</th>
+                </tr>
+            </thead>
+            <?php 
+            $num_rows = mysqli_num_rows($result);
+            if($num_rows > 0) {
+                while($row = mysqli_fetch_assoc($result)) {
+            ?>
+            <tbody>
+                <tr align=center>
+                    <td><?php echo $row['id'];?></td>
+                    <td>
+                        <a href="read.php?id=<?php echo $row['id']?>"><?php echo htmlspecialchars($row['title'])?></a>
+                    </td>
+                    <!-- <td><?php echo $row['name'];?></td> -->
+                    <!-- <td><?php echo $row['written'];?></td> -->
+                    <!-- <td><?php echo $row['hit'];?></td> -->
+                    <!-- <td><?php echo $row['liked'];?></td> -->
+                </tr>
+            </tbody>
+            <?php } 
+            } else {
+             ?>
+            <tr>
+                <td colspan="6" style="text-align: center;">검색된 결과가 없습니다.</td>
+            </tr>
+            <?php } ?>
+            <button class="ui primary button" onclick="history.back()">
+                뒤로가기
+            </button>
+        </table>
     </div>
-
     <div class="ui inverted vertical footer segment">
         <div class="ui center aligned container">
             <div class="ui stackable inverted divided grid">
@@ -227,7 +225,5 @@ $result = mysqli_query($conn, $sql);
     </script>
 
 </body>
-
-
 
 </html>

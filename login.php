@@ -3,10 +3,6 @@ session_start();
 if(!empty($_GET['returnURL'])){
     $type= $_GET['returnURL'];
 }
-// if(!empty($_GET['post_id'])){
-//     $post_id = $_GET['post_id'];
-// }
-
 
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
@@ -16,7 +12,6 @@ if (!$conn) {
 mysqli_select_db($conn, $dbConn["db"]);
 $result = mysqli_query($conn, "SELECT * FROM freeboard");
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -29,25 +24,7 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
 
     <!-- Site Properties -->
     <title>로그인</title>
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/reset.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/site.css" />
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/container.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/grid.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/header.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/image.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/menu.css" />
-
-    <link rel="stylesheet" type="text/css" href="semantic/components/divider.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/list.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/segment.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/dropdown.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/icon.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/input.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/button.css" />
-    <link rel="stylesheet" type="text/css" href="semantic/components/card.css" />
-
+    <link rel="stylesheet" type="text/css" class="ui" href="./semantic/semantic.min.css">
 
     <style type="text/css">
     body {
@@ -70,6 +47,10 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
     .signup {
         margin-bottom: 30px;
         ;
+    }
+
+    .ui .message {
+        margin-top: 3em;
     }
     </style>
 </head>
@@ -97,8 +78,9 @@ $result = mysqli_query($conn, "SELECT * FROM freeboard");
             <input type="hidden" name="post_id" value=<?php echo $post_id?>>
             <?php } ?>
             <button class="ui primary fluid button" type="submit">로그인</button>
-
         </form>
+        <div class="ui message">아이디가 없으신가요? <a href="signup.php">회원가입</a></div>
+
     </div>
 
 
