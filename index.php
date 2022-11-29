@@ -181,6 +181,9 @@ $result = mysqli_query($conn, $sql2);
             </div>
         </form>
 
+        <div>
+            <button class="ui primary button" onclick="document.location.href='write.php'">글쓰기</button>
+        </div>
         <?php 
         while ($row = mysqli_fetch_assoc($result)) { 
         ?>
