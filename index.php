@@ -1,15 +1,57 @@
 <?php
+####  session  ####
 session_start();
 
+
+####  db connection  ####
 require("db_config.php");
 $conn = mysqli_connect($dbConn["host"],$dbConn["user"],$dbConn["pwd"]);
 if (!$conn) {
     die("데이터베이스에 연결할 수 없습니다.");
 }
 mysqli_select_db($conn, $dbConn["db"]);
-$sql = "SELECT a.id as user_id, nickname, b.id as post_id, b.title, b.classify, b.content, b.regdate FROM user a JOIN post b ON a.id = b.user_id";
 
+
+####  pagination  ####
+// 현재 페이지 번호
+$current_page_num = isset($_GET["page"]) ? $_GET["page"] : 1;
+
+// 총 리스트 개수
+$sql = "SELECT a.id as user_id, nickname, b.id as post_id, b.title, b.classify, b.content, b.regdate FROM user a JOIN post b ON a.id = b.user_id";
 $result = mysqli_query($conn, $sql);
+$total_list_num = mysqli_num_rows($result); 
+
+// 페이지당 보여줄 리스트 개수
+$per_page_list_num = 10;
+
+// 블록당 보여줄 페이지 개수
+$per_block_page_num = 5;
+
+// 현재 페이지 블록        ............... ex) 1,2,3,4,5 => 1블록 / 6,7,8,9,10 => 2블록
+$current_block = ceil($current_page_num / $per_block_page_num);
+
+// 블록 시작번호           ............... ex) 1,2,3,4,5(1블록)의 시작번호는 1 / 6,7,8,9,10(2블록)의 시작번호는 6
+$start_block = (($current_block - 1) * $per_block_page_num) + 1;
+
+// 블록 마지막번호         ............... ex) 1블록의 마지막번호는 1 + 5 - 1 = 5
+$end_block = $start_block + $per_block_page_num - 1;
+
+// 전체 페이지 개수        ............... ex) 총 리스트 개수 ÷ 페이지당 보여줄 리스트 개수 , 총 리스트 개수가 2개, 페이지당 보여줄 리스트 개수는 10라면 0.2의 올림이니까 1. 리스트 10개까지 페이지 개수는 1, 리스트 11개부터 페이지 개수가 2.
+$total_page_num = ceil($total_list_num / $per_page_list_num);
+
+// 블록 마지막번호가 전체 페이지 개수보다 많다면, 전체 페이지 개수를 블록 마지막번호로 바꾼다.
+if($end_block > $total_page_num) $end_block = $total_page_num;
+
+// 총 블록 개수            ............... ex) 전체 페이지 개수 ÷ 블록당 보여줄 페이지 개수 = 1 ÷ 5 = 0.2 = 1
+$total_block_num = ceil($total_page_num / $per_block_page_num);
+
+// 시작 페이지..라기보다 조건문을 위한 변수    ............... ex) 페이지가 1이라면 (1-1) * 5 = 0
+$start_page = ($current_page_num - 1) * $per_page_list_num;
+
+// 게시글을 시작페이지부터 페이지당 보여줄 리스트 개수만큼 보여주기
+$sql2 = "SELECT a.id as user_id, nickname, b.id as post_id, b.title, b.classify, b.content, b.regdate FROM user a JOIN post b ON a.id = b.user_id ORDER BY post_id DESC LIMIT $start_page, $per_page_list_num";
+$result = mysqli_query($conn, $sql2);
+
 ?>
 
 
@@ -139,9 +181,10 @@ $result = mysqli_query($conn, $sql);
             </div>
         </form>
 
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php 
+        while ($row = mysqli_fetch_assoc($result)) { 
+        ?>
         <div class="ui card">
-            <!-- <?php echo $row['post_id']?> -->
             <div class="content">
                 <div class="header"><a
                         href="read.php?id=<?php echo $row['post_id']?>"><?php echo htmlspecialchars($row['title'])?></a>
@@ -166,11 +209,31 @@ $result = mysqli_query($conn, $sql);
                 <div class="ui small feed" id="regdate"><?php echo $row['regdate']?></div>
             </div>
         </div>
-        <?php } ?>
+        <?php
+         } 
+        ?>
         <div>
             <button class="ui primary button" onclick="document.location.href='write.php'">글쓰기</button>
         </div>
 
+        <?php 
+        if ($current_page_num > 1) {
+            echo "<a href='index.php?page=1'>처음</a>"; 
+            $pre = $current_page_num - 1; 
+            echo "<a href='index.php?page=$pre'>◀이전</a>";
+        }
+
+        for ($i = $start_block; $i <= $end_block; $i++) {
+            if ($current_page_num === $i) {
+                echo "<b>$i</b>";
+            } else {
+                echo "<a href='index.php?page=$i'>$i</a>";
+            } 
+        }
+
+
+
+?>
     </div>
 
     <div class="ui inverted vertical footer segment">
